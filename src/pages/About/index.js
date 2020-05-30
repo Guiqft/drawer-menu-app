@@ -7,6 +7,7 @@ export default function About(){
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            backgroundColor: "#1CF2FF",
         }}>
             <Text>
                 About Screen

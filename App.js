@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Routes from './src/routes';
+import Drawer from './src/navigation/drawer';
 
 export default function App() {
   return (
-    <Routes/>
+    <Drawer/>
   );
 }

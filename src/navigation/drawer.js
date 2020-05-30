@@ -7,10 +7,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 
-import Home from './pages/Home';
-import About from './pages/About';
+import styles from './styles';
 
-import ProfileImg from './assets/profile-picture.png';
+import Home from '../pages/Home';
+import Contact from '../pages/Contact';
+import About from '../pages/About';
+
+import ProfileImg from '../assets/profile-picture.png';
 
 const AppStack = createStackNavigator();
 const AppDrawer = createDrawerNavigator();
@@ -31,6 +34,7 @@ const Screens = ({ navigation, style }) =>{
                 )
             }}>
                 <AppStack.Screen name="Home" component={Home} />
+                <AppStack.Screen name="Contact" component={Contact} />
                 <AppStack.Screen name="About" component={About} />
             </AppStack.Navigator>
         </Animated.View>
@@ -47,23 +51,36 @@ const DrawerContent = props => {
                 </Text>
             </View>
 
-            <DrawerItem 
-                label="Home"
-                labelStyle={styles.menuItem}
-                onPress={() => props.navigation.navigate("Home")}
-                icon={() => <Feather name="home" size={24} color="black" />}
-            /> 
-            <DrawerItem 
-                label="About"
-                labelStyle={styles.menuItem}
-                onPress={() => props.navigation.navigate("About")}
-                icon={() => <Feather name="info" size={24} color="black" />}
-            /> 
+            <View style={styles.menuItemList}>
+                <DrawerItem 
+                    label="Home"
+                    //'style': style the item view
+                    //'labelStyle': style only the item text
+                    style={styles.menuItem}
+                    labelStyle={styles.menuItemText}
+                    onPress={() => props.navigation.navigate("Home")}
+                    icon={() => <Feather name="home" size={24} color="#E5E5E5" />}
+                /> 
+                <DrawerItem 
+                    label="Contact"
+                    style={styles.menuItem}
+                    labelStyle={styles.menuItemText}
+                    onPress={() => props.navigation.navigate("Contact")}
+                    icon={() => <Feather name="phone" size={24} color="#E5E5E5" />}
+                />
+                <DrawerItem 
+                    label="About"
+                    style={styles.menuItem}
+                    labelStyle={styles.menuItemText}
+                    onPress={() => props.navigation.navigate("About")}
+                    icon={() => <Feather name="info" size={24} color="#E5E5E5" />}
+                />
+            </View>
         </DrawerContentScrollView>
     );
 }
 
-export default function Routes(){
+export default function Drawer(){
     const [progress, setProgress] = React.useState(new Animated.Value(0));
 
     const scale = Animated.interpolate(progress, {
@@ -71,19 +88,30 @@ export default function Routes(){
         outputRange: [1, 0.8],
     });
 
-    const ScreensStyles = { transform: [{ scale }] };
+    const borderRadius = Animated.interpolate(progress, {
+        inputRange: [0, 1],
+        outputRange: [0, 30],
+    });
+
+    const ScreensStyles = { borderRadius, transform: [{ scale }] };
 
     return(
         <NavigationContainer>
             <AppDrawer.Navigator 
+                initialRouteName="Home"
                 drawerType="slide"
                 overlayColor="transparent"
-                drawerContentOptions={{
-                    activeBackgroundColor: "transparent",
-                    activeTintColor: "green",
-                    inactiveTintColor: "green",
+                drawerStyle={styles.drawerStyles}
+                // drawerContentOptions={{
+                //     activeBackgroundColor: "black",
+                //     itemContainerStyle: {
+                //         backgroundColor: "black",
+                //     },
+                // }}
+                contentContainerStyle={{ flex: 1 }}
+                sceneContainerStyle={{
+                    backgroundColor: "#FF4F5B",
                 }}
-                initialRouteName="Home"
                 drawerContent={props => {
                     setProgress(props.progress);
                     return <DrawerContent {...props} />;
@@ -96,41 +124,3 @@ export default function Routes(){
         </NavigationContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    stack: {
-        flex: 1,
-        shadowColor: '#FFF',
-        shadowOffset: {
-            width: 0,
-            height: 8,
-        },
-        shadowOpacity: 0.44,
-        shadowRadius: 10.32,
-        elevation: 5,
-    },
-
-    menuButton: {
-        backgroundColor: "black",
-        padding: 5,
-        marginLeft: 10,
-        borderRadius: 5,
-    },
-
-    profileInfos: {
-        flexDirection: "row",
-        alignContent: "center",
-        alignItems: "center",
-        marginLeft: 10,
-    },
-
-    profileInfosText: {
-        fontWeight: "bold",
-        fontSize: 19,
-        marginLeft: 17,
-    },
-
-    menuItem: {
-        marginLeft: -13,
-    },
-});
